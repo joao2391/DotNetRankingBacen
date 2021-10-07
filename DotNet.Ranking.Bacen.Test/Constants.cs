@@ -8,5 +8,6 @@
         public const string INSTI_DBF = "MASTER (conglomerado)";
         public const string INSTI_BF = "BTG PACTUAL/BANCO PAN (conglomerado)";
         public const int TRES = 3;
+        public const int DEZ = 10;
     }
 }
