@@ -14,21 +14,23 @@ namespace DotNet.Ranking.Bacen
         private readonly IHttpClientWrapper _httpClient;
         private readonly HtmlDocument _document;
         private readonly ChromeDriver _driver;
+        private readonly int _timeToSleep = 2000;
 
         public RankingBacen(IHttpClientWrapper clientFactory)
         {
-
             _httpClient = clientFactory;
         }
 
-        public RankingBacen(ChromeOptions driverOptions, string chromeDriverPath)
+        public RankingBacen(string chromeDriverPath, ChromeOptions driverOptions, int timeToSleep)
         {
             if (string.IsNullOrEmpty(chromeDriverPath)) 
             {
                 throw new ArgumentException("chromeDriverPath cannot be null");
             }
 
-            _driver = new ChromeDriver(chromeDriverPath, driverOptions);
+            var driver = new ChromeDriver(chromeDriverPath, driverOptions);
+            _driver = driver;
+            _timeToSleep = timeToSleep;
             _document = new HtmlDocument();
             
         }
@@ -112,6 +114,32 @@ namespace DotNet.Ranking.Bacen
             try
             {
                 var result = GetTop10();
+
+                return result;
+            }
+            catch (HtmlWebException)
+            {
+                throw;
+            }
+            catch (NoSuchElementException)
+            {
+                throw;
+            }
+            catch (WebDriverException)
+            {
+                throw;
+            }
+            catch (NodeNotFoundException)
+            {
+                throw;
+            }
+        }
+
+        public DemaisBancosEFinanceiras GetDemaisBancosEFinanceiras()
+        {
+            try
+            {
+                var result = GetAllDemaisBancosEFinanceiras();
 
                 return result;
             }
@@ -246,7 +274,7 @@ namespace DotNet.Ranking.Bacen
             var buttonElemnt = _driver.FindElementByClassName(Constants.BTN_BACK);
             buttonElemnt.Click();
 
-            Thread.Sleep(2000);
+            Thread.Sleep(_timeToSleep);
 
             var html = _driver.PageSource;
             _document.LoadHtml(html);
@@ -255,6 +283,24 @@ namespace DotNet.Ranking.Bacen
 
             return top10;
 
+        }
+
+        private DemaisBancosEFinanceiras GetAllDemaisBancosEFinanceiras()
+        {            
+            _driver.Navigate().GoToUrl(Constants.URL_BACEN);
+
+            var buttonElemnt = _driver.FindElementByXPath(Constants.XPATH_ALL_DBF);
+            buttonElemnt.Click();
+
+            Thread.Sleep(_timeToSleep);
+
+            var html = _driver.PageSource;
+            _document.LoadHtml(html);
+
+            var demaisBancos = BuildDemaisBancosEFinanceiras(_document);
+
+            return demaisBancos;
+            
         }
 
         private static Top3BF BuildTop3BancosEFinanceiras(HtmlNodeCollection collection)
@@ -394,6 +440,65 @@ namespace DotNet.Ranking.Bacen
             }
 
             return top10;
+        }
+
+        private static DemaisBancosEFinanceiras BuildDemaisBancosEFinanceiras(HtmlDocument htmlDocument)
+        {
+            var demaisBancos = new DemaisBancosEFinanceiras() { BancosFinanceiras = new BancosEFinanceiras[Constants.AMOUNT_OBJECTS_TWENTY_FOUR] };
+            var size = 0;
+            var participantsArray = new string[size];
+
+            for (int i = 0; i < Constants.AMOUNT_OBJECTS_TWENTY_FOUR; i++)
+            {
+                //                                                          /html/body/div/form/div[4]/div[2]/span[1]/h3/div[2]/a/span
+                // /html[1]/body[1]/div[1]/form[1]/div[4]/div[2]/span[1]/div[1]/span[1]/div[2]/div[1]/a[1]/span[1] nome if
+                // /html[1]/body[1]/div[1]/form[1]/div[4]/div[2]/span[1]/div[1]/span[1]/div[2]/div[2]/span[1] qtde recla
+                var position = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[1]/span[1]");
+                var institutionName = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[2]/span[1]");
+                var index = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[3]/span[1]");
+                var claims = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[4]/a[1]/span[1]");
+                var customersAmount = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[5]/span[1]");
+                var othersClaimsRegistred = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/div[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/a[1]/span[1]");
+                var othersClaimsNotRegistred = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/div[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/a[1]/span[1]");
+                var totalClaims = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/div[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/a[1]/span[1]");
+
+                var participantsTable = htmlDocument.DocumentNode.SelectNodes($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/div[1]/div[1]/table[1]");
+
+                if (participantsTable[0].ChildNodes.Count <= 3)
+                {
+                    participantsTable = null;
+                }
+                else
+                {
+                    size = participantsTable[0].ChildNodes[3].ChildNodes.Count - 1;
+                    participantsArray = new string[size];
+                }
+
+                if (participantsTable is not null)
+                {
+                    for (int j = 0; j < size; j++)
+                    {
+                        var participant = participantsTable[0].ChildNodes[3].ChildNodes[j].ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[1].InnerText.Trim();
+
+                        participantsArray[j] = participant;
+                    }
+                }
+
+                demaisBancos.BancosFinanceiras[i] = new BancosEFinanceiras
+                {
+                    Posicao = position.InnerText.Trim().Replace(Constants.SPACE, string.Empty),
+                    InstituicaoFinanceira = institutionName.InnerText.Trim().Replace(Constants.BREAKLINE, string.Empty),
+                    Indice = index.InnerText.Trim().Replace(Constants.BREAKLINE, string.Empty),
+                    Participantes = participantsArray.Length <= 0 ? null : participantsArray,
+                    QuantidadeClientes = customersAmount.InnerText.Trim(),
+                    ReclamacoesNaoReguladas = othersClaimsNotRegistred.InnerText.Trim(),
+                    ReclamacoesReguladasOutras = othersClaimsRegistred.InnerText.Trim(),
+                    ReclamacoesReguladasProcedentes = claims is null ? "0" : claims.InnerText.Trim(),
+                    TotalReclamacoes = totalClaims.InnerText.Trim()
+                };
+            }
+
+            return demaisBancos;
         }
 
         #endregion
