@@ -560,8 +560,7 @@ namespace DotNet.Ranking.Bacen
         }
 
         private static TodasReclamacoes BuildTodasReclamacoes(HtmlDocument htmlDocument)
-        {
-            //TODO Achar o SPAN para pegar só o texto sem o \r\n e etc
+        {            
             var nodesNaPagina = htmlDocument.DocumentNode.SelectNodes(Constants.XPATH_NODES_REC);
             var quantidadeItems = nodesNaPagina is null ? Constants.QUANTIDADE_OBJETOS_OITENTA_E_QUATRO : nodesNaPagina[0].ChildNodes.Count - 1;
 
@@ -581,7 +580,7 @@ namespace DotNet.Ranking.Bacen
 
                 reclamacoes.Reclamacoes[i] = new Reclamacao()
                 {
-                    Posicao = posicao is null ? posicaoSubstituta.ToString() : posicao.InnerText,
+                    Posicao = posicao is null ? posicaoSubstituta.ToString() : posicao.InnerText.Trim().Replace(Constants.SPACE, string.Empty),
                     Motivo = reclamacao?.InnerText,
                     Quantidade = Convert.ToInt32(Convert.ToDecimal(quantidade?.InnerText)),
                     Instituicoes = new List<BancosEFinanceiras>()
@@ -611,7 +610,7 @@ namespace DotNet.Ranking.Bacen
 
                         reclamacoes.Reclamacoes[i].Instituicoes.Add(new BancosEFinanceiras()
                                                     {
-                                                        InstituicaoFinanceira = nomeInstituicaoFinanceira,
+                                                        InstituicaoFinanceira = nomeInstituicaoFinanceira.Trim(),
                                                         TotalReclamacoes = quantidadeReclamacoes
                         }
                         );
