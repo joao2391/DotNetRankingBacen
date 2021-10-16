@@ -166,7 +166,7 @@ namespace DotNet.Ranking.Bacen
         {
             try
             {
-                var result = GetTodasReclamacoesFromBuildTodasReclamacoes();
+                var result = GetTodasReclamacoesDoBuildTodasReclamacoes();
 
                 return result;
             }
@@ -330,12 +330,12 @@ namespace DotNet.Ranking.Bacen
             
         }
 
-        private TodasReclamacoes GetTodasReclamacoesFromBuildTodasReclamacoes()
+        private TodasReclamacoes GetTodasReclamacoesDoBuildTodasReclamacoes()
         {
             _driver.Navigate().GoToUrl(Constants.URL_BACEN);
 
-            var buttonElemnt = _driver.FindElementByXPath(Constants.XPATH_ALL_CLAIMS);
-            buttonElemnt.Click();
+            var botaoListaCompleta = _driver.FindElementByXPath(Constants.XPATH_ALL_CLAIMS);
+            botaoListaCompleta.Click();
 
             Thread.Sleep(_timeToSleep);
 
@@ -349,19 +349,22 @@ namespace DotNet.Ranking.Bacen
 
         private static Top3BF BuildTop3BancosEFinanceiras(HtmlNodeCollection collection)
         {
-            var top3 = new Top3BF() { BancosFinanceiras = new BancosEFinanceiras[Constants.AMOUNT_OBJECTS_THREE] };
+            var nodesNaPagina = collection[0].ChildNodes[5].ChildNodes;
+            var quantidadeItems = nodesNaPagina is null ? Constants.QUANTIDADE_OBJETOS_TRES : collection[0].ChildNodes[5].ChildNodes.Count - 2;
 
-            for (int i = 0; i < Constants.AMOUNT_OBJECTS_THREE; i++)
+            var top3 = new Top3BF() { BancosFinanceiras = new BancosEFinanceiras[quantidadeItems] };
+
+            for (int i = 0; i < quantidadeItems; i++)
             {
-                var position = collection[0].ChildNodes[5].ChildNodes[i+1].ChildNodes[1].ChildNodes[1];
-                var institutionName = collection[0].ChildNodes[5].ChildNodes[i+1].ChildNodes[1].ChildNodes[3];
-                var index = collection[0].ChildNodes[5].ChildNodes[i+1].ChildNodes[1].ChildNodes[5];
+                var posicao = collection[0].ChildNodes[5].ChildNodes[i+1].ChildNodes[1].ChildNodes[1];
+                var nomeInstituicaoFinanceira = collection[0].ChildNodes[5].ChildNodes[i+1].ChildNodes[1].ChildNodes[3];
+                var indice = collection[0].ChildNodes[5].ChildNodes[i+1].ChildNodes[1].ChildNodes[5];
                 
                 top3.BancosFinanceiras[i] = new BancosEFinanceiras
                 {
-                    Posicao = position.InnerText.Trim().Replace(Constants.SPACE, string.Empty),
-                    InstituicaoFinanceira = institutionName.InnerText.Trim().Replace(Constants.BREAKLINE, string.Empty),
-                    Indice = index.InnerText.Trim().Replace(Constants.BREAKLINE, string.Empty)
+                    Posicao = posicao.InnerText.Trim().Replace(Constants.SPACE, string.Empty),
+                    InstituicaoFinanceira = nomeInstituicaoFinanceira.InnerText.Trim().Replace(Constants.BREAKLINE, string.Empty),
+                    Indice = indice.InnerText.Trim().Replace(Constants.BREAKLINE, string.Empty)
                     
                 };
             }
@@ -371,19 +374,22 @@ namespace DotNet.Ranking.Bacen
 
         private static Top3BF BuildTop3DemaisBancosEFinanceiras(HtmlNodeCollection collection)
         {
-            var top3 = new Top3BF() { BancosFinanceiras = new BancosEFinanceiras[Constants.AMOUNT_OBJECTS_THREE] };
+            var nodesNaPagina = collection[0].ChildNodes[5].ChildNodes;
+            var quantidadeItems = nodesNaPagina is null ? Constants.QUANTIDADE_OBJETOS_TRES : collection[0].ChildNodes[5].ChildNodes.Count - 2;
 
-            for (int i = 0; i < Constants.AMOUNT_OBJECTS_THREE; i++)
+            var top3 = new Top3BF() { BancosFinanceiras = new BancosEFinanceiras[quantidadeItems] };
+
+            for (int i = 0; i < quantidadeItems; i++)
             {
-                var position = collection[0].ChildNodes[5].ChildNodes[i + 1].ChildNodes[1].ChildNodes[1];
-                var institutionName = collection[0].ChildNodes[5].ChildNodes[i + 1].ChildNodes[1].ChildNodes[3];
-                var index = collection[0].ChildNodes[5].ChildNodes[i + 1].ChildNodes[1].ChildNodes[5];
+                var posicao = collection[0].ChildNodes[5].ChildNodes[i + 1].ChildNodes[1].ChildNodes[1];
+                var nomeInstituicaoFinanceira = collection[0].ChildNodes[5].ChildNodes[i + 1].ChildNodes[1].ChildNodes[3];
+                var indice = collection[0].ChildNodes[5].ChildNodes[i + 1].ChildNodes[1].ChildNodes[5];
                 
                 top3.BancosFinanceiras[i] = new BancosEFinanceiras
                 {
-                    Posicao = position.InnerText.Trim().Replace(Constants.SPACE, string.Empty),
-                    InstituicaoFinanceira = institutionName.InnerText.Trim().Replace(Constants.BREAKLINE, string.Empty),
-                    Indice = index.InnerText.Trim().Replace(Constants.BREAKLINE, string.Empty)
+                    Posicao = posicao.InnerText.Trim().Replace(Constants.SPACE, string.Empty),
+                    InstituicaoFinanceira = nomeInstituicaoFinanceira.InnerText.Trim().Replace(Constants.BREAKLINE, string.Empty),
+                    Indice = indice.InnerText.Trim().Replace(Constants.BREAKLINE, string.Empty)
                 };
             }
 
@@ -392,17 +398,20 @@ namespace DotNet.Ranking.Bacen
 
         private static Top3Reclamacoes BuildTop3Reclamacoes(HtmlNodeCollection collection)
         {
-            var top3 = new Top3Reclamacoes() { Reclamacoes = new Reclamacao[Constants.AMOUNT_OBJECTS_THREE] };
+            var nodesNaPagina = collection[0].ChildNodes[5].ChildNodes;
+            var quantidadeItems = nodesNaPagina is null ? Constants.QUANTIDADE_OBJETOS_TRES : collection[0].ChildNodes[5].ChildNodes.Count - 2;
 
-            for (int i = 0; i < Constants.AMOUNT_OBJECTS_THREE; i++)
+            var top3 = new Top3Reclamacoes() { Reclamacoes = new Reclamacao[quantidadeItems] };
+
+            for (int i = 0; i < quantidadeItems; i++)
             {
-                var position = collection[0].ChildNodes[5].ChildNodes[i + 1].ChildNodes[1].ChildNodes[1];
-                var reason = collection[0].ChildNodes[5].ChildNodes[i + 1].ChildNodes[1].ChildNodes[3];
+                var posicao = collection[0].ChildNodes[5].ChildNodes[i + 1].ChildNodes[1].ChildNodes[1];
+                var motivo = collection[0].ChildNodes[5].ChildNodes[i + 1].ChildNodes[1].ChildNodes[3];
 
                 top3.Reclamacoes[i] = new Reclamacao
                 {
-                    Posicao = position.InnerText.Trim().Replace(Constants.SPACE, string.Empty),
-                    Motivo = reason.InnerText.Trim()
+                    Posicao = posicao.InnerText.Trim().Replace(Constants.SPACE, string.Empty),
+                    Motivo = motivo.InnerText.Trim()
                 };
             }
 
@@ -411,19 +420,22 @@ namespace DotNet.Ranking.Bacen
 
         private static Top03AdmConsorcio BuildTop3AdmConsorcio(HtmlNodeCollection collection)
         {
-            var top3 = new Top03AdmConsorcio() { AdministradorasConsorcio = new AdmConsorcio[Constants.AMOUNT_OBJECTS_THREE] };
+            var nodesNaPagina = collection[0].ChildNodes[5].ChildNodes;
+            var quantidadeItems = nodesNaPagina is null ? Constants.QUANTIDADE_OBJETOS_TRES : collection[0].ChildNodes[5].ChildNodes.Count - 2;
 
-            for (int i = 0; i < Constants.AMOUNT_OBJECTS_THREE; i++)
+            var top3 = new Top03AdmConsorcio() { AdministradorasConsorcio = new AdmConsorcio[quantidadeItems] };
+
+            for (int i = 0; i < quantidadeItems; i++)
             {
-                var position = collection[0].ChildNodes[5].ChildNodes[i + 1].ChildNodes[1].ChildNodes[1];
-                var institutionName = collection[0].ChildNodes[5].ChildNodes[i + 1].ChildNodes[1].ChildNodes[3];
-                var index = collection[0].ChildNodes[5].ChildNodes[i + 1].ChildNodes[1].ChildNodes[5];
+                var posicao = collection[0].ChildNodes[5].ChildNodes[i + 1].ChildNodes[1].ChildNodes[1];
+                var nomeInstituicaoFinanceira = collection[0].ChildNodes[5].ChildNodes[i + 1].ChildNodes[1].ChildNodes[3];
+                var indice = collection[0].ChildNodes[5].ChildNodes[i + 1].ChildNodes[1].ChildNodes[5];
 
                 top3.AdministradorasConsorcio[i] = new AdmConsorcio
                 {
-                    Posicao = position.InnerText.Trim().Replace(Constants.SPACE, string.Empty),
-                    Indice = index.InnerText.Trim(),
-                    NomeAdmConsorcio = institutionName.InnerText.Trim()
+                    Posicao = posicao.InnerText.Trim().Replace(Constants.SPACE, string.Empty),
+                    Indice = indice.InnerText.Trim(),
+                    NomeAdmConsorcio = nomeInstituicaoFinanceira.InnerText.Trim()
                 };
             }
 
@@ -432,20 +444,23 @@ namespace DotNet.Ranking.Bacen
 
         private static Top10BF BuildTop10BancosEFinanceiras(HtmlDocument htmlDocument)
         {
-            var top10 = new Top10BF() { BancosFinanceiras = new BancosEFinanceiras[Constants.AMOUNT_OBJECTS_TEN] };
-            var size = 0;
-            var participantsArray = new string[size];
+            var nodesNaPagina = htmlDocument.DocumentNode.SelectNodes(Constants.XPATH_NODES_BF);
+            var quantidadeItems = nodesNaPagina is null ? Constants.QUANTIDADE_OBJETOS_DEZ : nodesNaPagina[0].ChildNodes.Count - 2;
 
-            for (int i = 0; i < Constants.AMOUNT_OBJECTS_TEN; i++)
+            var top10 = new Top10BF() { BancosFinanceiras = new BancosEFinanceiras[quantidadeItems] };
+            var tamanho = 0;
+            var participantsArray = new string[tamanho];
+
+            for (int i = 0; i < quantidadeItems; i++)
             {
-                var position = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[1]/span[1]");
-                var institutionName = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[2]/span[1]");
-                var index = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[3]/span[1]");
-                var claims = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[4]/a[1]/span[1]");
-                var customersAmount = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[5]/span[1]");
-                var othersClaimsRegistred = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/div[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/a[1]/span[1]");
-                var othersClaimsNotRegistred = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/div[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/a[1]/span[1]");
-                var totalClaims = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/div[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/a[1]/span[1]");
+                var posicao = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[1]/span[1]");
+                var nomeInstituicaoFinanceira = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[2]/span[1]");
+                var indice = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[3]/span[1]");
+                var reclamacoes = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[4]/a[1]/span[1]");
+                var quantidadeClientes = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[5]/span[1]");
+                var outrasReclamacoesRegistradas = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/div[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/a[1]/span[1]");
+                var outrasReclamacoesNaoRegistradas = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/div[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/a[1]/span[1]");
+                var totalReclamacoes = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/div[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/a[1]/span[1]");
 
                 var participantsTable = htmlDocument.DocumentNode.SelectNodes($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/div[1]/div[1]/table[1]");
 
@@ -455,13 +470,13 @@ namespace DotNet.Ranking.Bacen
                 }
                 else
                 {
-                    size = participantsTable[0].ChildNodes[3].ChildNodes.Count - 1;
-                    participantsArray = new string[size];
+                    tamanho = participantsTable[0].ChildNodes[3].ChildNodes.Count - 1;
+                    participantsArray = new string[tamanho];
                 }                
 
                 if (participantsTable is not null)
                 {
-                    for (int j = 0; j < size; j++)
+                    for (int j = 0; j < tamanho; j++)
                     {
                         var participant = participantsTable[0].ChildNodes[3].ChildNodes[j].ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[1].InnerText.Trim();
 
@@ -471,15 +486,15 @@ namespace DotNet.Ranking.Bacen
 
                 top10.BancosFinanceiras[i] = new BancosEFinanceiras
                 {
-                    Posicao = position.InnerText.Trim().Replace(Constants.SPACE, string.Empty),
-                    InstituicaoFinanceira = institutionName.InnerText.Trim().Replace(Constants.BREAKLINE, string.Empty),
-                    Indice = index.InnerText.Trim().Replace(Constants.BREAKLINE, string.Empty),
+                    Posicao = posicao.InnerText.Trim().Replace(Constants.SPACE, string.Empty),
+                    InstituicaoFinanceira = nomeInstituicaoFinanceira.InnerText.Trim().Replace(Constants.BREAKLINE, string.Empty),
+                    Indice = indice.InnerText.Trim().Replace(Constants.BREAKLINE, string.Empty),
                     Participantes = participantsArray.Length <= 0 ? null : participantsArray,
-                    QuantidadeClientes = customersAmount.InnerText.Trim(),
-                    ReclamacoesNaoReguladas = othersClaimsNotRegistred.InnerText.Trim(),
-                    ReclamacoesReguladasOutras = othersClaimsRegistred.InnerText.Trim(),
-                    ReclamacoesReguladasProcedentes = claims is null ? "0" : claims.InnerText.Trim(),
-                    TotalReclamacoes = totalClaims.InnerText.Trim()
+                    QuantidadeClientes = quantidadeClientes.InnerText.Trim(),
+                    ReclamacoesNaoReguladas = outrasReclamacoesNaoRegistradas.InnerText.Trim(),
+                    ReclamacoesReguladasOutras = outrasReclamacoesRegistradas.InnerText.Trim(),
+                    ReclamacoesReguladasProcedentes = reclamacoes is null ? "0" : reclamacoes.InnerText.Trim(),
+                    TotalReclamacoes = totalReclamacoes.InnerText.Trim()
                 };
             }
 
@@ -487,58 +502,57 @@ namespace DotNet.Ranking.Bacen
         }
 
         private static DemaisBancosEFinanceiras BuildDemaisBancosEFinanceiras(HtmlDocument htmlDocument)
-        {
-            var demaisBancos = new DemaisBancosEFinanceiras() { BancosFinanceiras = new BancosEFinanceiras[Constants.AMOUNT_OBJECTS_TWENTY_FOUR] };
-            var size = 0;
-            var participantsArray = new string[size];
+        {            
+            var nodesNaPagina = htmlDocument.DocumentNode.SelectNodes(Constants.XPATH_NODES_DBF);
+            var quantidadeItems = nodesNaPagina is null ? Constants.QUANTIDADE_OBJETOS_VINTE_E_QUATRO : nodesNaPagina[0].ChildNodes.Count - 2;
+            var demaisBancos = new DemaisBancosEFinanceiras() { BancosFinanceiras = new BancosEFinanceiras[quantidadeItems] };
+            var tamanho = 0;
+            var arrayParticipantes = new string[tamanho];
 
-            for (int i = 0; i < Constants.AMOUNT_OBJECTS_TWENTY_FOUR; i++)
+            for (int i = 0; i < quantidadeItems; i++)
             {
-                //                                                          /html/body/div/form/div[4]/div[2]/span[1]/h3/div[2]/a/span
-                // /html[1]/body[1]/div[1]/form[1]/div[4]/div[2]/span[1]/div[1]/span[1]/div[2]/div[1]/a[1]/span[1] nome if
-                // /html[1]/body[1]/div[1]/form[1]/div[4]/div[2]/span[1]/div[1]/span[1]/div[2]/div[2]/span[1] qtde recla
-                var position = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[1]/span[1]");
-                var institutionName = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[2]/span[1]");
-                var index = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[3]/span[1]");
-                var claims = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[4]/a[1]/span[1]");
-                var customersAmount = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[5]/span[1]");
-                var othersClaimsRegistred = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/div[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/a[1]/span[1]");
-                var othersClaimsNotRegistred = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/div[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/a[1]/span[1]");
-                var totalClaims = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/div[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/a[1]/span[1]");
+                var posicao = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[1]/span[1]");
+                var nomeInstituicaoFinanceira = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[2]/span[1]");
+                var indice = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[3]/span[1]");
+                var reclamacoes = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[4]/a[1]/span[1]");
+                var quantidadeClientes = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/h3[1]/div[5]/span[1]");
+                var outrasReclamacoesRegistradas = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/div[1]/div[2]/table[1]/tbody[1]/tr[2]/td[2]/a[1]/span[1]");
+                var outrasReclamacoesNaoRegistradas = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/div[1]/div[2]/table[1]/tbody[1]/tr[3]/td[2]/a[1]/span[1]");
+                var totalReclamacoes = htmlDocument.DocumentNode.SelectSingleNode($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/div[1]/div[2]/table[1]/tbody[1]/tr[4]/td[2]/a[1]/span[1]");
 
-                var participantsTable = htmlDocument.DocumentNode.SelectNodes($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/div[1]/div[1]/table[1]");
+                var participantes = htmlDocument.DocumentNode.SelectNodes($"/html[1]/body[1]/div[1]/form[1]/div[4]/span[1]/span[1]/div[2]/span[{i + 1}]/div[1]/div[1]/table[1]");
 
-                if (participantsTable[0].ChildNodes.Count <= 3)
+                if (participantes[0].ChildNodes.Count <= 3)
                 {
-                    participantsTable = null;
+                    participantes = null;
                 }
                 else
                 {
-                    size = participantsTable[0].ChildNodes[3].ChildNodes.Count - 1;
-                    participantsArray = new string[size];
+                    tamanho = participantes[0].ChildNodes[3].ChildNodes.Count - 1;
+                    arrayParticipantes = new string[tamanho];
                 }
 
-                if (participantsTable is not null)
+                if (participantes is not null)
                 {
-                    for (int j = 0; j < size; j++)
+                    for (int j = 0; j < tamanho; j++)
                     {
-                        var participant = participantsTable[0].ChildNodes[3].ChildNodes[j].ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[1].InnerText.Trim();
+                        var participante = participantes[0].ChildNodes[3].ChildNodes[j].ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[1].InnerText.Trim();
 
-                        participantsArray[j] = participant;
+                        arrayParticipantes[j] = participante;
                     }
                 }
 
                 demaisBancos.BancosFinanceiras[i] = new BancosEFinanceiras
                 {
-                    Posicao = position.InnerText.Trim().Replace(Constants.SPACE, string.Empty),
-                    InstituicaoFinanceira = institutionName.InnerText.Trim().Replace(Constants.BREAKLINE, string.Empty),
-                    Indice = index.InnerText.Trim().Replace(Constants.BREAKLINE, string.Empty),
-                    Participantes = participantsArray.Length <= 0 ? null : participantsArray,
-                    QuantidadeClientes = customersAmount.InnerText.Trim(),
-                    ReclamacoesNaoReguladas = othersClaimsNotRegistred.InnerText.Trim(),
-                    ReclamacoesReguladasOutras = othersClaimsRegistred.InnerText.Trim(),
-                    ReclamacoesReguladasProcedentes = claims is null ? "0" : claims.InnerText.Trim(),
-                    TotalReclamacoes = totalClaims.InnerText.Trim()
+                    Posicao = posicao.InnerText.Trim().Replace(Constants.SPACE, string.Empty),
+                    InstituicaoFinanceira = nomeInstituicaoFinanceira.InnerText.Trim().Replace(Constants.BREAKLINE, string.Empty),
+                    Indice = indice.InnerText.Trim().Replace(Constants.BREAKLINE, string.Empty),
+                    Participantes = arrayParticipantes.Length <= 0 ? null : arrayParticipantes,
+                    QuantidadeClientes = quantidadeClientes.InnerText.Trim(),
+                    ReclamacoesNaoReguladas = outrasReclamacoesNaoRegistradas.InnerText.Trim(),
+                    ReclamacoesReguladasOutras = outrasReclamacoesRegistradas.InnerText.Trim(),
+                    ReclamacoesReguladasProcedentes = reclamacoes is null ? "0" : reclamacoes.InnerText.Trim(),
+                    TotalReclamacoes = totalReclamacoes.InnerText.Trim()
                 };
             }
 
@@ -547,57 +561,59 @@ namespace DotNet.Ranking.Bacen
 
         private static TodasReclamacoes BuildTodasReclamacoes(HtmlDocument htmlDocument)
         {
-            var baseN = htmlDocument.DocumentNode.SelectNodes("/html[1]/body[1]/div[1]/form[1]/div[4]/div[2]");
-            var qtdes = baseN[0].ChildNodes.Count - 1;
+            //TODO Achar o SPAN para pegar só o texto sem o \r\n e etc
+            var nodesNaPagina = htmlDocument.DocumentNode.SelectNodes(Constants.XPATH_NODES_REC);
+            var quantidadeItems = nodesNaPagina is null ? Constants.QUANTIDADE_OBJETOS_OITENTA_E_QUATRO : nodesNaPagina[0].ChildNodes.Count - 1;
 
             var reclamacoes = new TodasReclamacoes()
             {
-                Reclamacoes = new Reclamacao[qtdes]
+                Reclamacoes = new Reclamacao[quantidadeItems]
             };
             
-            for (int i = 0; i < qtdes; i++)
+            for (int i = 0; i < quantidadeItems; i++)
             {
-                var pos1 = htmlDocument.DocumentNode.SelectSingleNode($"/html/body/div/form/div[4]/div[2]/span[{i + 1}]/h3/div[1]");
+                var posicao = htmlDocument.DocumentNode.SelectSingleNode($"/html/body/div/form/div[4]/div[2]/span[{i + 1}]/h3/div[1]");
                 var reclamacao = htmlDocument.DocumentNode.SelectSingleNode($"/html/body/div/form/div[4]/div[2]/span[{i + 1}]/h3/div[2]");
                 var quantidade = htmlDocument.DocumentNode.SelectSingleNode($"/html/body/div/form/div[4]/div[2]/span[{i + 1}]/h3/div[3]");
-                var nomeIf = "";
-                var qtdePerIf = "";
-                var posCon = i + 1;
+                var nomeInstituicaoFinanceira = "";
+                var quantidadeReclamacoes = "";
+                var posicaoSubstituta = i + 1;
 
                 reclamacoes.Reclamacoes[i] = new Reclamacao()
                 {
-                    Posicao = pos1 is null ? posCon.ToString() : pos1.InnerText,
+                    Posicao = posicao is null ? posicaoSubstituta.ToString() : posicao.InnerText,
                     Motivo = reclamacao?.InnerText,
                     Quantidade = Convert.ToInt32(Convert.ToDecimal(quantidade?.InnerText)),
                     Instituicoes = new List<BancosEFinanceiras>()
                 };
 
 
-                var tabelaParticipantes = htmlDocument.DocumentNode.SelectNodes($"/html[1]/body[1]/div[1]/form[1]/div[4]/div[2]/span[{i + 1}]/div[1]/span[1]");
+                var instituicoesFinanceiras = htmlDocument.DocumentNode.SelectNodes($"/html[1]/body[1]/div[1]/form[1]/div[4]/div[2]/span[{i + 1}]/div[1]/span[1]");
 
-                for (int j = 0; j < tabelaParticipantes?[0]?.ChildNodes?.Count; j++)
+                for (int j = 0; j < instituicoesFinanceiras?[0]?.ChildNodes?.Count; j++)
                 {
-                    if (j >= 5 && tabelaParticipantes[0]?.ChildNodes[j]?.ChildNodes.Count > 0)
+                    if (j >= 5 && instituicoesFinanceiras[0]?.ChildNodes[j]?.ChildNodes.Count > 0)
                     {
-                        var t1 = tabelaParticipantes[0]?.ChildNodes[j]?.ChildNodes[1]?.ChildNodes[3]?.ChildNodes[0];
-                        if (t1?.InnerText == "\r\n")
+                        var nomeInstituicaoNoHtml = instituicoesFinanceiras[0]?.ChildNodes[j]?.ChildNodes[1]?.ChildNodes[3]?.ChildNodes[0];
+
+                        if (nomeInstituicaoNoHtml?.InnerText == "\r\n")
                         {
-                            var teste = tabelaParticipantes[0]?.ChildNodes[j]?.ChildNodes[1]?.ChildNodes[3]?.ChildNodes[1];
-                            nomeIf = teste is null ? string.Empty : teste.InnerText;
+                            var instituicaoFinanceira = instituicoesFinanceiras[0]?.ChildNodes[j]?.ChildNodes[1]?.ChildNodes[3]?.ChildNodes[1];
+                            nomeInstituicaoFinanceira = instituicaoFinanceira is null ? string.Empty : instituicaoFinanceira.InnerText;
                         }
                         else
                         {
-                            nomeIf = t1?.InnerText;
+                            nomeInstituicaoFinanceira = nomeInstituicaoNoHtml?.InnerText;
                         }
 
-                        var teste2 = tabelaParticipantes[0]?.ChildNodes[j]?.ChildNodes[2]?.ChildNodes[3]?.ChildNodes[0];
-                        qtdePerIf = teste2 is null ? string.Empty : teste2.InnerText;
+                        var quantidadeReclamacoesNoHtml = instituicoesFinanceiras[0]?.ChildNodes[j]?.ChildNodes[2]?.ChildNodes[3]?.ChildNodes[0];
+                        quantidadeReclamacoes = quantidadeReclamacoesNoHtml is null ? string.Empty : quantidadeReclamacoesNoHtml.InnerText;
 
                         reclamacoes.Reclamacoes[i].Instituicoes.Add(new BancosEFinanceiras()
                                                     {
-                                                        InstituicaoFinanceira = nomeIf,
-                                                        TotalReclamacoes = qtdePerIf
-                                                    }
+                                                        InstituicaoFinanceira = nomeInstituicaoFinanceira,
+                                                        TotalReclamacoes = quantidadeReclamacoes
+                        }
                         );
                         
                     }
