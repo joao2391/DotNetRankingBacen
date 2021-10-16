@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -161,6 +162,32 @@ namespace DotNet.Ranking.Bacen
             }
         }
 
+        public TodasReclamacoes GetTodasReclamacoes()
+        {
+            try
+            {
+                var result = GetTodasReclamacoesFromBuildTodasReclamacoes();
+
+                return result;
+            }
+            catch (HtmlWebException)
+            {
+                throw;
+            }
+            catch (NoSuchElementException)
+            {
+                throw;
+            }
+            catch (WebDriverException)
+            {
+                throw;
+            }
+            catch (NodeNotFoundException)
+            {
+                throw;
+            }
+        }
+
         #region Private Methods
         private async Task<Top3BF> GetTop03BancosEFinanceiras()
         {
@@ -301,6 +328,23 @@ namespace DotNet.Ranking.Bacen
 
             return demaisBancos;
             
+        }
+
+        private TodasReclamacoes GetTodasReclamacoesFromBuildTodasReclamacoes()
+        {
+            _driver.Navigate().GoToUrl(Constants.URL_BACEN);
+
+            var buttonElemnt = _driver.FindElementByXPath(Constants.XPATH_ALL_CLAIMS);
+            buttonElemnt.Click();
+
+            Thread.Sleep(_timeToSleep);
+
+            var html = _driver.PageSource;
+            _document.LoadHtml(html);
+
+            var todasReclamacoes = BuildTodasReclamacoes(_document);
+
+            return todasReclamacoes;
         }
 
         private static Top3BF BuildTop3BancosEFinanceiras(HtmlNodeCollection collection)
@@ -500,6 +544,71 @@ namespace DotNet.Ranking.Bacen
 
             return demaisBancos;
         }
+
+        private static TodasReclamacoes BuildTodasReclamacoes(HtmlDocument htmlDocument)
+        {
+            var baseN = htmlDocument.DocumentNode.SelectNodes("/html[1]/body[1]/div[1]/form[1]/div[4]/div[2]");
+            var qtdes = baseN[0].ChildNodes.Count - 1;
+
+            var reclamacoes = new TodasReclamacoes()
+            {
+                Reclamacoes = new Reclamacao[qtdes]
+            };
+            
+            for (int i = 0; i < qtdes; i++)
+            {
+                var pos1 = htmlDocument.DocumentNode.SelectSingleNode($"/html/body/div/form/div[4]/div[2]/span[{i + 1}]/h3/div[1]");
+                var reclamacao = htmlDocument.DocumentNode.SelectSingleNode($"/html/body/div/form/div[4]/div[2]/span[{i + 1}]/h3/div[2]");
+                var quantidade = htmlDocument.DocumentNode.SelectSingleNode($"/html/body/div/form/div[4]/div[2]/span[{i + 1}]/h3/div[3]");
+                var nomeIf = "";
+                var qtdePerIf = "";
+                var posCon = i + 1;
+
+                reclamacoes.Reclamacoes[i] = new Reclamacao()
+                {
+                    Posicao = pos1 is null ? posCon.ToString() : pos1.InnerText,
+                    Motivo = reclamacao?.InnerText,
+                    Quantidade = Convert.ToInt32(Convert.ToDecimal(quantidade?.InnerText)),
+                    Instituicoes = new List<BancosEFinanceiras>()
+                };
+
+
+                var tabelaParticipantes = htmlDocument.DocumentNode.SelectNodes($"/html[1]/body[1]/div[1]/form[1]/div[4]/div[2]/span[{i + 1}]/div[1]/span[1]");
+
+                for (int j = 0; j < tabelaParticipantes?[0]?.ChildNodes?.Count; j++)
+                {
+                    if (j >= 5 && tabelaParticipantes[0]?.ChildNodes[j]?.ChildNodes.Count > 0)
+                    {
+                        var t1 = tabelaParticipantes[0]?.ChildNodes[j]?.ChildNodes[1]?.ChildNodes[3]?.ChildNodes[0];
+                        if (t1?.InnerText == "\r\n")
+                        {
+                            var teste = tabelaParticipantes[0]?.ChildNodes[j]?.ChildNodes[1]?.ChildNodes[3]?.ChildNodes[1];
+                            nomeIf = teste is null ? string.Empty : teste.InnerText;
+                        }
+                        else
+                        {
+                            nomeIf = t1?.InnerText;
+                        }
+
+                        var teste2 = tabelaParticipantes[0]?.ChildNodes[j]?.ChildNodes[2]?.ChildNodes[3]?.ChildNodes[0];
+                        qtdePerIf = teste2 is null ? string.Empty : teste2.InnerText;
+
+                        reclamacoes.Reclamacoes[i].Instituicoes.Add(new BancosEFinanceiras()
+                                                    {
+                                                        InstituicaoFinanceira = nomeIf,
+                                                        TotalReclamacoes = qtdePerIf
+                                                    }
+                        );
+                        
+                    }
+
+                }
+            }
+
+
+            return reclamacoes;
+        }
+
 
         #endregion
 
