@@ -10,6 +10,7 @@ namespace DotNet.Ranking.Bacen
         Task<Top03AdmConsorcio> GetTop03AdmConsorcioAsync();
         Top10BF GetTop10BancosEFinanceiras();
         TodasReclamacoes GetTodasReclamacoes();
+        TodasAdmConsorcio GetTodasAdmsConsorcio();
 
     }
 }
