@@ -6,6 +6,7 @@ using Xunit;
 using System.IO;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
+using System;
 
 namespace DotNet.Ranking.Bacen.Test
 {
@@ -109,15 +110,6 @@ namespace DotNet.Ranking.Bacen.Test
             Assert.IsType<Top03AdmConsorcio>(result);
             Assert.Equal(Constants.TRES, result.AdministradorasConsorcio.Length);
             Assert.Equal(Constants.NOME_ADM, result.AdministradorasConsorcio[0].NomeAdmConsorcio);            
-
-        }
-
-        [Fact]
-        public void Should_Return_Top10_Bancos_E_Financeiras_From_GetTop10BancosEFinanceirasAsync()
-        {
-            //TODO
-
-            Assert.True(true);
 
         }
     }

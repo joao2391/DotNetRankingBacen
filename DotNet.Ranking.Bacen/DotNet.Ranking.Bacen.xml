@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DotNet.Ranking.Bacen</name>
+    </assembly>
+    <members>
+        <member name="M:DotNet.Ranking.Bacen.RankingBacen.#ctor(DotNet.Ranking.Bacen.IHttpClientWrapper)">
+            <summary>
+            Construtor para instanciar a classe HttpClientWrapper via injeção de dependência.
+            Utilizado para buscar os Top 03.
+            </summary>
+            <param name="httpClientWrapper">Objeto HttpClientWrapper</param>
+        </member>
+        <member name="M:DotNet.Ranking.Bacen.RankingBacen.#ctor(System.String,OpenQA.Selenium.Chrome.ChromeOptions,System.Int32)">
+            <summary>
+            Construtor para instanciar o Selenium ChromeDriver.
+            Utilizado para buscar o ranking completo.
+            </summary>
+            <param name="chromeDriverPath">Caminho do executável do ChromeDriver.</param>
+            <param name="driverOptions">Objeto do tipo ChromeOptions. Utilizado para definir as configs de execução do ChromeDriver.</param>
+            <param name="timeToSleep">Tempo em que será aguardado até o carregamento completo da página.</param>
+        </member>
+        <member name="M:DotNet.Ranking.Bacen.RankingBacen.GetTop03BancosEFinanceirasAsync">
+            <summary>
+            Retorna os Top 03 Bancos e Financeiras listados na página do BACEN.
+            </summary>
+            <returns>Objeto do tipo Top3BF</returns>
+            <exception cref="T:System.Net.Http.HttpRequestException">HttpRequestException</exception>
+            <exception cref="T:HtmlAgilityPack.HtmlWebException">HtmlWebException</exception>
+        </member>
+        <member name="M:DotNet.Ranking.Bacen.RankingBacen.GetTop03DemaisBancosEFinanceirasAsync">
+            <summary>
+            Retorna os Top 03 Demais Bancos e Financeiras listados na página do BACEN.
+            </summary>
+            <returns>Objeto do tipo Top3BF</returns>
+            <exception cref="T:System.Net.Http.HttpRequestException">HttpRequestException</exception>
+            <exception cref="T:HtmlAgilityPack.HtmlWebException">HtmlWebException</exception>
+        </member>
+        <member name="M:DotNet.Ranking.Bacen.RankingBacen.GetTop03ReclamacoesAsync">
+            <summary>
+            Retorna os Top 03 Reclamações listadas na página do BACEN.
+            </summary>
+            <returns>Objeto do tipo Top3Reclamacoes</returns>
+            <exception cref="T:System.Net.Http.HttpRequestException">HttpRequestException</exception>
+            <exception cref="T:HtmlAgilityPack.HtmlWebException">HtmlWebException</exception>
+        </member>
+        <member name="M:DotNet.Ranking.Bacen.RankingBacen.GetTop03AdmConsorcioAsync">
+            <summary>
+            Retorna os Top 03 Administradoras de Consórcio listadas na página do BACEN.
+            </summary>
+            <returns>Objeto do tipo Top03AdmConsorcio</returns>
+            <exception cref="T:System.Net.Http.HttpRequestException">HttpRequestException</exception>
+            <exception cref="T:HtmlAgilityPack.HtmlWebException">HtmlWebException</exception>
+        </member>
+        <member name="M:DotNet.Ranking.Bacen.RankingBacen.GetTop10BancosEFinanceiras">
+            <summary>
+            Retorna os Top 10 Bancos e Financeiras listadas na página do BACEN.
+            </summary>
+            <returns>Objeto do tipo Top10BF</returns>
+            <exception cref="T:HtmlAgilityPack.HtmlWebException">HttpRequestException</exception>
+            <exception cref="T:OpenQA.Selenium.NoSuchElementException">HtmlWebException</exception>
+            <exception cref="T:OpenQA.Selenium.WebDriverException">HtmlWebException</exception>
+            <exception cref="T:HtmlAgilityPack.NodeNotFoundException">HtmlWebException</exception>
+        </member>
+        <member name="M:DotNet.Ranking.Bacen.RankingBacen.GetDemaisBancosEFinanceiras">
+            <summary>
+            Retorna a lista completa do Demais Bancos e Financeiras da página do BACEN.
+            </summary>
+            <returns>Objeto do tipo DemaisBancosEFinanceiras</returns>
+            <exception cref="T:HtmlAgilityPack.HtmlWebException">HttpRequestException</exception>
+            <exception cref="T:OpenQA.Selenium.NoSuchElementException">HtmlWebException</exception>
+            <exception cref="T:OpenQA.Selenium.WebDriverException">HtmlWebException</exception>
+            <exception cref="T:HtmlAgilityPack.NodeNotFoundException">HtmlWebException</exception>
+        </member>
+        <member name="M:DotNet.Ranking.Bacen.RankingBacen.GetTodasReclamacoes">
+            <summary>
+            Retorna a lista completa de Reclamações da página do BACEN.
+            </summary>
+            <returns>Objeto do tipo TodasReclamacoes</returns>
+            <exception cref="T:HtmlAgilityPack.HtmlWebException">HttpRequestException</exception>
+            <exception cref="T:OpenQA.Selenium.NoSuchElementException">HtmlWebException</exception>
+            <exception cref="T:OpenQA.Selenium.WebDriverException">HtmlWebException</exception>
+            <exception cref="T:HtmlAgilityPack.NodeNotFoundException">HtmlWebException</exception>
+        </member>
+        <member name="M:DotNet.Ranking.Bacen.RankingBacen.GetTodasAdmsConsorcio">
+            <summary>
+            Retorna a lista completa de Administradoras de Consórcio da página do BACEN.
+            </summary>
+            <returns>Objeto do tipo TodasAdmConsorcio</returns>
+            <exception cref="T:HtmlAgilityPack.HtmlWebException">HttpRequestException</exception>
+            <exception cref="T:OpenQA.Selenium.NoSuchElementException">HtmlWebException</exception>
+            <exception cref="T:OpenQA.Selenium.WebDriverException">HtmlWebException</exception>
+            <exception cref="T:HtmlAgilityPack.NodeNotFoundException">HtmlWebException</exception>
+        </member>
+    </members>
+</doc>

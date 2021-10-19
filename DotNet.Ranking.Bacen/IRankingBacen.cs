@@ -2,6 +2,9 @@ using System.Threading.Tasks;
 
 namespace DotNet.Ranking.Bacen
 {
+    /// <summary>
+    /// Funções que buscam informaçãoes do BACEN.
+    /// </summary>
     public interface IRankingBacen
     {
         Task<Top3BF> GetTop03BancosEFinanceirasAsync();

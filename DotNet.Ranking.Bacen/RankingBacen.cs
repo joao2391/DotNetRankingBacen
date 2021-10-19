@@ -9,6 +9,9 @@ using OpenQA.Selenium.Chrome;
 
 namespace DotNet.Ranking.Bacen
 {
+    /// <summary>
+    /// Classe com funções que buscam informaçãoes do BACEN.
+    /// </summary>
     public class RankingBacen : IRankingBacen
     {
 
@@ -17,16 +20,28 @@ namespace DotNet.Ranking.Bacen
         private readonly ChromeDriver _driver;
         private readonly int _timeToSleep = 2000;
 
-        public RankingBacen(IHttpClientWrapper clientFactory)
+        /// <summary>
+        /// Construtor para instanciar a classe HttpClientWrapper via injeção de dependência.
+        /// Utilizado para buscar os Top 03.
+        /// </summary>
+        /// <param name="httpClientWrapper">Objeto HttpClientWrapper</param>
+        public RankingBacen(IHttpClientWrapper httpClientWrapper)
         {
-            _httpClient = clientFactory;
+            _httpClient = httpClientWrapper;
         }
 
+        /// <summary>
+        /// Construtor para instanciar o Selenium ChromeDriver.
+        /// Utilizado para buscar o ranking completo.
+        /// </summary>
+        /// <param name="chromeDriverPath">Caminho do executável do ChromeDriver.</param>
+        /// <param name="driverOptions">Objeto do tipo ChromeOptions. Utilizado para definir as configs de execução do ChromeDriver.</param>
+        /// <param name="timeToSleep">Tempo em que será aguardado até o carregamento completo da página.</param>
         public RankingBacen(string chromeDriverPath, ChromeOptions driverOptions, int timeToSleep)
         {
             if (string.IsNullOrEmpty(chromeDriverPath)) 
             {
-                throw new ArgumentException("chromeDriverPath cannot be null");
+                throw new ArgumentNullException(chromeDriverPath, "chromeDriverPath não pode ser vazio");
             }
 
             var driver = new ChromeDriver(chromeDriverPath, driverOptions);
@@ -36,6 +51,12 @@ namespace DotNet.Ranking.Bacen
             
         }
 
+        /// <summary>
+        /// Retorna os Top 03 Bancos e Financeiras listados na página do BACEN.
+        /// </summary>
+        /// <returns>Objeto do tipo Top3BF</returns>
+        /// <exception cref="HttpRequestException">HttpRequestException</exception>
+        /// <exception cref="HtmlWebException">HtmlWebException</exception>
         public async Task<Top3BF> GetTop03BancosEFinanceirasAsync()
         {
             try
@@ -56,6 +77,12 @@ namespace DotNet.Ranking.Bacen
 
         }
 
+        /// <summary>
+        /// Retorna os Top 03 Demais Bancos e Financeiras listados na página do BACEN.
+        /// </summary>
+        /// <returns>Objeto do tipo Top3BF</returns>
+        /// <exception cref="HttpRequestException">HttpRequestException</exception>
+        /// <exception cref="HtmlWebException">HtmlWebException</exception>
         public async Task<Top3BF> GetTop03DemaisBancosEFinanceirasAsync()
         {
             try
@@ -74,6 +101,12 @@ namespace DotNet.Ranking.Bacen
             }
         }
 
+        /// <summary>
+        /// Retorna os Top 03 Reclamações listadas na página do BACEN.
+        /// </summary>
+        /// <returns>Objeto do tipo Top3Reclamacoes</returns>
+        /// <exception cref="HttpRequestException">HttpRequestException</exception>
+        /// <exception cref="HtmlWebException">HtmlWebException</exception>
         public async Task<Top3Reclamacoes> GetTop03ReclamacoesAsync()
         {
             try
@@ -92,6 +125,12 @@ namespace DotNet.Ranking.Bacen
             }
         }
 
+        /// <summary>
+        /// Retorna os Top 03 Administradoras de Consórcio listadas na página do BACEN.
+        /// </summary>
+        /// <returns>Objeto do tipo Top03AdmConsorcio</returns>
+        /// <exception cref="HttpRequestException">HttpRequestException</exception>
+        /// <exception cref="HtmlWebException">HtmlWebException</exception>
         public async Task<Top03AdmConsorcio> GetTop03AdmConsorcioAsync()
         {
             try
@@ -110,6 +149,14 @@ namespace DotNet.Ranking.Bacen
             }
         }
 
+        /// <summary>
+        /// Retorna os Top 10 Bancos e Financeiras listadas na página do BACEN.
+        /// </summary>
+        /// <returns>Objeto do tipo Top10BF</returns>
+        /// <exception cref="HtmlWebException">HttpRequestException</exception>
+        /// <exception cref="NoSuchElementException">HtmlWebException</exception>
+        /// <exception cref="WebDriverException">HtmlWebException</exception>
+        /// <exception cref="NodeNotFoundException">HtmlWebException</exception>
         public Top10BF GetTop10BancosEFinanceiras()
         {
             try
@@ -136,6 +183,14 @@ namespace DotNet.Ranking.Bacen
             }
         }
 
+        /// <summary>
+        /// Retorna a lista completa do Demais Bancos e Financeiras da página do BACEN.
+        /// </summary>
+        /// <returns>Objeto do tipo DemaisBancosEFinanceiras</returns>
+        /// <exception cref="HtmlWebException">HttpRequestException</exception>
+        /// <exception cref="NoSuchElementException">HtmlWebException</exception>
+        /// <exception cref="WebDriverException">HtmlWebException</exception>
+        /// <exception cref="NodeNotFoundException">HtmlWebException</exception>
         public DemaisBancosEFinanceiras GetDemaisBancosEFinanceiras()
         {
             try
@@ -162,6 +217,14 @@ namespace DotNet.Ranking.Bacen
             }
         }
 
+        /// <summary>
+        /// Retorna a lista completa de Reclamações da página do BACEN.
+        /// </summary>
+        /// <returns>Objeto do tipo TodasReclamacoes</returns>
+        /// <exception cref="HtmlWebException">HttpRequestException</exception>
+        /// <exception cref="NoSuchElementException">HtmlWebException</exception>
+        /// <exception cref="WebDriverException">HtmlWebException</exception>
+        /// <exception cref="NodeNotFoundException">HtmlWebException</exception>
         public TodasReclamacoes GetTodasReclamacoes()
         {
             try
@@ -188,6 +251,14 @@ namespace DotNet.Ranking.Bacen
             }
         }
 
+        /// <summary>
+        /// Retorna a lista completa de Administradoras de Consórcio da página do BACEN.
+        /// </summary>
+        /// <returns>Objeto do tipo TodasAdmConsorcio</returns>
+        /// <exception cref="HtmlWebException">HttpRequestException</exception>
+        /// <exception cref="NoSuchElementException">HtmlWebException</exception>
+        /// <exception cref="WebDriverException">HtmlWebException</exception>
+        /// <exception cref="NodeNotFoundException">HtmlWebException</exception>
         public TodasAdmConsorcio GetTodasAdmsConsorcio()
         {
             try
@@ -321,6 +392,10 @@ namespace DotNet.Ranking.Bacen
 
         private Top10BF GetTop10()
         {
+            if(_driver is null)
+            {
+                throw new WebDriverException("O ChromeDriver está nulo. Por favor, passe o caminho do executável no construtor da classe.");
+            }
 
             _driver.Navigate().GoToUrl(Constants.URL_BACEN);
 
@@ -341,7 +416,13 @@ namespace DotNet.Ranking.Bacen
         }
 
         private DemaisBancosEFinanceiras GetAllDemaisBancosEFinanceiras()
-        {            
+        {
+            if (_driver is null)
+            {
+                throw new WebDriverException("O ChromeDriver está nulo. Por favor, passe o caminho do executável no construtor da classe.");
+            }
+
+
             _driver.Navigate().GoToUrl(Constants.URL_BACEN);
 
             var botaoListaCompleta = _driver.FindElementByXPath(Constants.XPATH_ALL_DBF);
@@ -362,6 +443,12 @@ namespace DotNet.Ranking.Bacen
 
         private TodasReclamacoes GetTodasReclamacoesDoBuildTodasReclamacoes()
         {
+
+            if (_driver is null)
+            {
+                throw new WebDriverException("O ChromeDriver está nulo. Por favor, passe o caminho do executável no construtor da classe.");
+            }
+
             _driver.Navigate().GoToUrl(Constants.URL_BACEN);
 
             var botaoListaCompleta = _driver.FindElementByXPath(Constants.XPATH_ALL_CLAIMS);
@@ -381,6 +468,12 @@ namespace DotNet.Ranking.Bacen
 
         private TodasAdmConsorcio GetTodasAdmConsorcioDoBuildTodasAdmConsorcio()
         {
+
+            if (_driver is null)
+            {
+                throw new WebDriverException("O ChromeDriver está nulo. Por favor, passe o caminho do executável no construtor da classe.");
+            }
+
             _driver.Navigate().GoToUrl(Constants.URL_BACEN);
 
             var botaoListaCompleta = _driver.FindElementByXPath(Constants.XPATH_ALL_ADM);
