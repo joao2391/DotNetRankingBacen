@@ -5,7 +5,7 @@
 	  <Authors>João Paulo de Castro Lima</Authors>
 	  <Company>joao2391</Company>
 	  <Product>DotNetRankingBacen</Product>
-	  <Description>This lib helps you to get Top 03 banking institutions from claim's list of BACEN.</Description>
+	  <Description>This lib helps you to get all informations from claim's list of BACEN.</Description>
 	  <PackageTags>Scrap, WebScrap, Crawler, WebCrawler, bacen</PackageTags>
 	  <PackageReleaseNotes>Beta version</PackageReleaseNotes>
 	  <PackageId>DotNetRankingBacen</PackageId>
@@ -15,7 +15,7 @@
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
 	  <PackageProjectUrl>https://github.com/joao2391/DotNetRankingBacen</PackageProjectUrl>
 	  <RepositoryType>Git</RepositoryType>
-	  <Version>1.0.0</Version>
+	  <Version>1.1.0</Version>
 	  <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
 	  <PublishRepositoryUrl>true</PublishRepositoryUrl>
 
