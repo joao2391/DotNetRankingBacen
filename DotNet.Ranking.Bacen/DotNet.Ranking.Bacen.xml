@@ -4,6 +4,16 @@
         <name>DotNet.Ranking.Bacen</name>
     </assembly>
     <members>
+        <member name="T:DotNet.Ranking.Bacen.IRankingBacen">
+            <summary>
+            Funções que buscam informaçãoes do BACEN.
+            </summary>
+        </member>
+        <member name="T:DotNet.Ranking.Bacen.RankingBacen">
+            <summary>
+            Classe com funções que buscam informaçãoes do BACEN.
+            </summary>
+        </member>
         <member name="M:DotNet.Ranking.Bacen.RankingBacen.#ctor(DotNet.Ranking.Bacen.IHttpClientWrapper)">
             <summary>
             Construtor para instanciar a classe HttpClientWrapper via injeção de dependência.
