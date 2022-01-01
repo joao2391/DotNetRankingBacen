@@ -26,17 +26,17 @@ services.<ChooseYours><IRankingBacen, RankingBacen>();
 ### Features
 You will get an object with an object's array of size 03
 ```C#
-var bancosFinanceiras = GetTop03BancosEFinanceirasAsync();
+var bancosFinanceiras = await GetTop03BancosEFinanceirasAsync();
 ```
  
 ```C#
-var demaisBancosFinancerias = GetTop03DemaisBancosEFinanceirasAsync();
+var demaisBancosFinancerias = await GetTop03DemaisBancosEFinanceirasAsync();
 ```
 ```C#
-var reclamacoes = GetTop03ReclamacoesAsync();
+var reclamacoes = await GetTop03ReclamacoesAsync();
 ```
 ```C#
-var administradorasConsorcio = GetTop03AdmConsorcioAsync();
+var administradorasConsorcio = await GetTop03AdmConsorcioAsync();
 ```
 ## Usage - With Selenium
 Download chromedriver.exe (version 94 or higher) from [official website](https://chromedriver.chromium.org/downloads).
