@@ -3,16 +3,16 @@
 DotNetRankingBacen is a .Net library that helps you to get all informations from claim's list of BACEN (current quarter).
 
 ## Notes
-Version 1.1.0:
+Version 1.1.1:
 
-- Added features to get all information from claim's list of BACEN.
+- Upgrade to .NET 6
 
 ## Installation
 
 Use the package manager to install.
 
 ```bash
-Install-Package DotNetRankingBacen  -Version 1.1.0
+Install-Package DotNetRankingBacen  -Version 1.1.1
 ```
 
 ## Usage - Without Selenium
