@@ -17,7 +17,7 @@ namespace DotNet.Ranking.Bacen.Test
         
         public RankingBacenTests()
         {
-            fakeContent = File.ReadAllText(@".\FakeData.html");
+            fakeContent = File.ReadAllText(@"./FakeData.html");
         }
 
 
