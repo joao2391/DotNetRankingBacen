@@ -6,7 +6,7 @@
     <members>
         <member name="T:DotNet.Ranking.Bacen.IRankingBacen">
             <summary>
-            Funções que buscam informaçãoes do BACEN.
+            Fun��es que buscam informa��oes do BACEN.
             </summary>
         </member>
         <member name="T:DotNet.Ranking.Bacen.RankingBacen">
